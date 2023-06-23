@@ -1,14 +1,31 @@
 package com.fatemorgan.imgspring.endpoints;
 
-import org.springframework.boot.context.properties.bind.DefaultValue;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.fatemorgan.imgspring.services.ImageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@RestController
+@Controller
+@ComponentScan("com.fatemorgan.imgspring.services")
+@RequestMapping(path = "/image")
 public class ImageController {
-    public byte[] getGrayScale(@RequestParam("image") MultipartFile image,
-                               @RequestParam("threshold") @DefaultValue("50") int threshold){
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImageController.class);
 
+    @Autowired
+    private ImageService imageService;
+
+    @PostMapping(path = "/get_black_and_white", produces = MediaType.IMAGE_PNG_VALUE)
+    public @ResponseBody byte[] getBlackAndWhite(@RequestParam("image") MultipartFile image){
+        try{
+            return new ImageService().getBlackAndWhite(image.getInputStream());
+        } catch (Exception e){
+            LOGGER.error(e.getMessage(), e);
+            return e.getMessage().getBytes();
+        }
     }
 }
