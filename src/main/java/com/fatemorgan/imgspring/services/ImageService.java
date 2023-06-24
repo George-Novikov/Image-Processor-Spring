@@ -49,4 +49,15 @@ public class ImageService {
         return ImageProcessor.imageToByteArray(bufferedImage);
     }
 
+    public byte[] changeBrightness(InputStream inStream, float brightenFactor, float offset) throws IOException {
+        BufferedImage bufferedImage = ImageProcessor.streamToImage(inStream);
+        bufferedImage = ImageProcessor.changeBrightness(bufferedImage, brightenFactor, offset);
+        return ImageProcessor.imageToByteArray(bufferedImage);
+    }
+
+    public byte[] changeContrast(InputStream inStream, float contrastFactor) throws IOException {
+        BufferedImage bufferedImage = ImageProcessor.streamToImage(inStream);
+        bufferedImage = ImageProcessor.changeContrast(bufferedImage, contrastFactor);
+        return ImageProcessor.imageToByteArray(bufferedImage);
+    }
 }

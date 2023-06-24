@@ -96,4 +96,31 @@ public class ImageProcessor {
         BufferedImageOp op = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
         return op.filter(bufferedImage, null);
     }
+
+    public static BufferedImage changeBrightness(BufferedImage bufferedImage,
+                                                 float brightenFactor,
+                                                 float offset){
+        RescaleOp rescaleOP = new RescaleOp(brightenFactor, offset, null);
+        return rescaleOP.filter(bufferedImage, bufferedImage);
+    }
+
+    public static BufferedImage changeContrast(BufferedImage bufferedImage, float contrastFactor){
+        if (contrastFactor != 1){
+            for (int y = 0; y < bufferedImage.getHeight(); y++){
+                for (int x = 0; x < bufferedImage.getWidth(); x++){
+                    IntegerRGB intRGB = new IntegerRGB(bufferedImage.getRGB(x, y));
+                    intRGB.setBlue(changeColorContrast(intRGB.getBlue(), contrastFactor, intRGB.isBlueBright()));
+                    intRGB.setGreen(changeColorContrast(intRGB.getGreen(), contrastFactor, intRGB.isGreenBright()));
+                    intRGB.setRed(changeColorContrast(intRGB.getRed(), contrastFactor, intRGB.isRedBright()));
+                    intRGB.normalize();
+                    bufferedImage.setRGB(x, y, intRGB.getIntFromRGB());
+                }
+            }
+        }
+        return bufferedImage;
+    }
+
+    private static int changeColorContrast(int color, float contrastFactor, boolean isIncreased){
+        return isIncreased ? Math.round(color + color * contrastFactor / 10) : Math.round(color - color * contrastFactor / 10);
+    }
 }

@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
+
 @Controller
 @ComponentScan("com.fatemorgan.imgspring.services")
 @RequestMapping(path = "/image")
@@ -80,6 +82,29 @@ public class ImageController {
     public @ResponseBody byte[] sharpen(@RequestParam("image") MultipartFile image){
         try {
             return imageService.sharpen(image.getInputStream());
+        } catch (Exception e){
+            LOGGER.error(e.getMessage(), e);
+            return e.getMessage().getBytes();
+        }
+    }
+
+    @PostMapping(path = "/change_brightness", produces = MediaType.IMAGE_PNG_VALUE)
+    public @ResponseBody byte[] changeBrightness(@RequestParam("image") MultipartFile image,
+                                                 @RequestParam(name = "brightness", defaultValue = "1") float brightenFactor,
+                                                 @RequestParam(name = "offset", defaultValue = "1") float offset){
+        try {
+            return imageService.changeBrightness(image.getInputStream(), brightenFactor, offset);
+        } catch (Exception e){
+            LOGGER.error(e.getMessage(), e);
+            return e.getMessage().getBytes();
+        }
+    }
+
+    @PostMapping(path = "/change_contrast", produces = MediaType.IMAGE_PNG_VALUE)
+    public @ResponseBody byte[] changeContrast(@RequestParam("image") MultipartFile image,
+                                               @RequestParam(name = "contrast", defaultValue = "1") float contrastFactor){
+        try {
+            return imageService.changeContrast(image.getInputStream(), contrastFactor);
         } catch (Exception e){
             LOGGER.error(e.getMessage(), e);
             return e.getMessage().getBytes();
