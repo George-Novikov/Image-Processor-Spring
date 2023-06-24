@@ -22,7 +22,18 @@ public class ImageController {
     @PostMapping(path = "/get_black_and_white", produces = MediaType.IMAGE_PNG_VALUE)
     public @ResponseBody byte[] getBlackAndWhite(@RequestParam("image") MultipartFile image){
         try{
-            return new ImageService().getBlackAndWhite(image.getInputStream());
+            return imageService.getBlackAndWhite(image.getInputStream());
+        } catch (Exception e){
+            LOGGER.error(e.getMessage(), e);
+            return e.getMessage().getBytes();
+        }
+    }
+
+    @PostMapping(path = "/get_grayscale", produces = MediaType.IMAGE_PNG_VALUE)
+    public @ResponseBody byte[] getGrayscale(@RequestParam("image") MultipartFile image,
+                                             @RequestParam(name = "threshold", defaultValue = "50") int threshold){
+        try {
+            return imageService.getGrayscale(image.getInputStream(), threshold);
         } catch (Exception e){
             LOGGER.error(e.getMessage(), e);
             return e.getMessage().getBytes();

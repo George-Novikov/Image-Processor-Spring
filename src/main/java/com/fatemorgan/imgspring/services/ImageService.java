@@ -10,9 +10,15 @@ import java.io.InputStream;
 @Component("imageService")
 public class ImageService {
 
-    public byte[] getBlackAndWhite(InputStream inputStream) throws IOException {
-        BufferedImage bufferedImage = ImageProcessor.streamToImage(inputStream);
+    public byte[] getBlackAndWhite(InputStream inStream) throws IOException {
+        BufferedImage bufferedImage = ImageProcessor.streamToImage(inStream);
         bufferedImage = ImageProcessor.toBlackAndWhite(bufferedImage);
+        return ImageProcessor.imageToByteArray(bufferedImage);
+    }
+
+    public byte[] getGrayscale(InputStream inStream, int threshold) throws IOException {
+        BufferedImage bufferedImage = ImageProcessor.streamToImage(inStream);
+        bufferedImage = ImageProcessor.toGrayscale(bufferedImage, threshold);
         return ImageProcessor.imageToByteArray(bufferedImage);
     }
 }
