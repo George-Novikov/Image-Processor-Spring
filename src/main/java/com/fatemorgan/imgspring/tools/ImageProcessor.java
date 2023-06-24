@@ -1,6 +1,7 @@
 package com.fatemorgan.imgspring.tools;
 
 import com.fatemorgan.imgspring.entities.IntegerRGB;
+import com.fatemorgan.imgspring.entities.Segment;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -52,4 +53,26 @@ public class ImageProcessor {
         baos.close();
         return output;
     }
+
+    public static Segment imageToSegment(BufferedImage bufferedImage, int x, int y, int size){
+        Segment segment = new Segment(x, y, size);
+        for (int iy = 0; iy < segment.getSize(); iy++){
+            for (int ix = 0; ix < segment.getSize(); ix++){
+                int intColor = bufferedImage.getRGB(segment.dX(ix), segment.dY(iy));
+                segment.setPixel(ix, iy, intColor);
+            }
+        }
+        return segment;
+    }
+
+    public static BufferedImage segmentToImage(Segment segment){
+        BufferedImage outputImage = new BufferedImage(segment.getSize(), segment.getSize(), BufferedImage.TYPE_INT_RGB);
+        for (int y = 0; y < segment.getSize(); y++){
+            for (int x = 0; x < segment.getSize(); x++){
+                outputImage.setRGB(x, y, segment.getPixel(x, y));
+            }
+        }
+        return outputImage;
+    }
+
 }

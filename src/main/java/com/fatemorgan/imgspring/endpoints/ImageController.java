@@ -39,4 +39,17 @@ public class ImageController {
             return e.getMessage().getBytes();
         }
     }
+
+    @PostMapping(path = "/get_segment", produces = MediaType.IMAGE_PNG_VALUE)
+    public @ResponseBody byte[] getXYSegment(@RequestParam("image") MultipartFile image,
+                                             @RequestParam(name = "x", defaultValue = "0") int x,
+                                             @RequestParam(name = "y", defaultValue = "0") int y,
+                                             @RequestParam(name = "size", defaultValue = "50") int size){
+        try {
+            return imageService.getXYSegment(image.getInputStream(), x, y, size);
+        } catch (Exception e){
+            LOGGER.error(e.getMessage(), e);
+            return e.getMessage().getBytes();
+        }
+    }
 }
