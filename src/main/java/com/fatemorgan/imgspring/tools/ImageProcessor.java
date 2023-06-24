@@ -1,5 +1,6 @@
 package com.fatemorgan.imgspring.tools;
 
+import com.fatemorgan.imgspring.entities.Coordinates;
 import com.fatemorgan.imgspring.entities.IntegerRGB;
 import com.fatemorgan.imgspring.entities.Segment;
 
@@ -72,6 +73,20 @@ public class ImageProcessor {
                 outputImage.setRGB(x, y, segment.getPixel(x, y));
             }
         }
+        return outputImage;
+    }
+
+    public static Coordinates getSegmentationLimits(BufferedImage bi, int segmentSize){
+        return Coordinates.of(bi.getWidth()/segmentSize - 1, bi.getHeight()/segmentSize - 1);
+    }
+
+    public static BufferedImage resize(BufferedImage originalImage, float multiplier){
+        int targetWidth = Math.round(originalImage.getWidth() * multiplier);
+        int targetHeight = Math.round(originalImage.getHeight() * multiplier);
+
+        Image scaledImage = originalImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_DEFAULT);
+        BufferedImage outputImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
+        outputImage.getGraphics().drawImage(scaledImage, 0, 0, null);
         return outputImage;
     }
 

@@ -1,5 +1,6 @@
 package com.fatemorgan.imgspring.endpoints;
 
+import com.fatemorgan.imgspring.entities.Coordinates;
 import com.fatemorgan.imgspring.services.ImageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +48,28 @@ public class ImageController {
                                              @RequestParam(name = "size", defaultValue = "50") int size){
         try {
             return imageService.getXYSegment(image.getInputStream(), x, y, size);
+        } catch (Exception e){
+            LOGGER.error(e.getMessage(), e);
+            return e.getMessage().getBytes();
+        }
+    }
+
+    @PostMapping(path = "/get_segmentation_limits", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Coordinates getSegmentationLimits(@RequestParam("image") MultipartFile image,
+                                                           @RequestParam(name = "size", defaultValue = "50") int segmentSize){
+        try {
+            return imageService.getSegmentationLimits(image.getInputStream(), segmentSize);
+        } catch (Exception e){
+            LOGGER.error(e.getMessage(), e);
+            return Coordinates.of(e.getMessage(), e);
+        }
+    }
+
+    @PostMapping(path = "/resize", produces = MediaType.IMAGE_PNG_VALUE)
+    public @ResponseBody byte[] resize(@RequestParam("image") MultipartFile image,
+                                       @RequestParam(name = "resize", defaultValue = "0") float multiplier){
+        try {
+            return imageService.resize(image.getInputStream(), multiplier);
         } catch (Exception e){
             LOGGER.error(e.getMessage(), e);
             return e.getMessage().getBytes();
