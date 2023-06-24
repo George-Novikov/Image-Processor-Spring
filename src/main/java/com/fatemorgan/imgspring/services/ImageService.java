@@ -43,4 +43,10 @@ public class ImageService {
         return ImageProcessor.imageToByteArray(bufferedImage);
     }
 
+    public byte[] sharpen(InputStream inStream) throws IOException {
+        BufferedImage bufferedImage = ImageProcessor.streamToImage(inStream);
+        bufferedImage = ImageProcessor.sharpen(bufferedImage);
+        return ImageProcessor.imageToByteArray(bufferedImage);
+    }
+
 }

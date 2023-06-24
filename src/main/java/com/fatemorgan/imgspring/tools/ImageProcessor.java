@@ -7,10 +7,7 @@ import com.fatemorgan.imgspring.entities.Segment;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.FilteredImageSource;
-import java.awt.image.ImageFilter;
-import java.awt.image.ImageProducer;
+import java.awt.image.*;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -90,4 +87,13 @@ public class ImageProcessor {
         return outputImage;
     }
 
+    public static BufferedImage sharpen(BufferedImage bufferedImage){
+        float[] kernelMatrix = new float[] {
+                0, -1, 0,
+                -1, 5, -1,
+                0, -1, 0 };
+        Kernel kernel = new Kernel(3, 3, kernelMatrix);
+        BufferedImageOp op = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
+        return op.filter(bufferedImage, null);
+    }
 }

@@ -75,4 +75,14 @@ public class ImageController {
             return e.getMessage().getBytes();
         }
     }
+
+    @PostMapping(path = "/sharpen", produces = MediaType.IMAGE_PNG_VALUE)
+    public @ResponseBody byte[] sharpen(@RequestParam("image") MultipartFile image){
+        try {
+            return imageService.sharpen(image.getInputStream());
+        } catch (Exception e){
+            LOGGER.error(e.getMessage(), e);
+            return e.getMessage().getBytes();
+        }
+    }
 }
