@@ -120,7 +120,7 @@ public class ImageProcessor {
         return bufferedImage;
     }
 
-    private static int changeColorContrast(int color, float contrastFactor, boolean isIncreased){
-        return isIncreased ? Math.round(color + color * contrastFactor / 10) : Math.round(color - color * contrastFactor / 10);
+    private static int changeColorContrast(int color, float contr, boolean isIncreased){
+        return isIncreased ? Math.round(color + color * (contr - (contr * 128 / color)) / 10) : Math.round(color - color * (contr - (contr * color / 127)) / 10);
     }
 }
