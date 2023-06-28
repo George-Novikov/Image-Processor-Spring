@@ -110,4 +110,14 @@ public class ImageController {
             return e.getMessage().getBytes();
         }
     }
+
+    @PostMapping(path = "/get_average_brightness", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody String getAverageBrightness(@RequestParam("image") MultipartFile image){
+        try {
+            return imageService.getAverageBrightness(image.getInputStream());
+        } catch (Exception e){
+            LOGGER.error(e.getMessage(), e);
+            return e.getMessage();
+        }
+    }
 }

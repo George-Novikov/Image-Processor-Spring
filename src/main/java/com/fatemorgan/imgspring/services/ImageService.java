@@ -60,4 +60,10 @@ public class ImageService {
         bufferedImage = ImageProcessor.changeContrast(bufferedImage, contrastFactor);
         return ImageProcessor.imageToByteArray(bufferedImage);
     }
+
+    public String getAverageBrightness(InputStream inStream) throws IOException {
+        BufferedImage bufferedImage = ImageProcessor.streamToImage(inStream);
+        float averageBrightness = ImageProcessor.measureBrightness(bufferedImage);
+        return String.valueOf(averageBrightness);
+    }
 }

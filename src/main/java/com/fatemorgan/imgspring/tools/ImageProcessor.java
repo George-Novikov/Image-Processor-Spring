@@ -12,6 +12,9 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.OptionalDouble;
 
 public class ImageProcessor {
     public static BufferedImage toBlackAndWhite(BufferedImage bufferedImage){
@@ -95,6 +98,18 @@ public class ImageProcessor {
         Kernel kernel = new Kernel(3, 3, kernelMatrix);
         BufferedImageOp op = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
         return op.filter(bufferedImage, null);
+    }
+
+    public static float measureBrightness(BufferedImage bufferedImage){
+        java.util.List<Float> brightnessList = new ArrayList<>();
+        for (int y = 0; y < bufferedImage.getHeight(); y++){
+            for (int x = 0; x < bufferedImage.getWidth(); x++){
+                IntegerRGB rgb = new IntegerRGB(bufferedImage.getRGB(x, y));
+                brightnessList.add(Color.RGBtoHSB(rgb.getRed(), rgb.getGreen(), rgb.getBlue(), null)[2]);
+            }
+        }
+        OptionalDouble averageBrightness = brightnessList.stream().mapToDouble(b -> b).average();
+        return (float) averageBrightness.getAsDouble();
     }
 
     public static BufferedImage changeBrightness(BufferedImage bufferedImage,
